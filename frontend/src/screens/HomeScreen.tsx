@@ -108,7 +108,7 @@ export const HomeScreen: React.FC = () => {
     <SafeAreaView style={styles.container} edges={['top']}>
       <FlatList
         data={vehicles ?? []}
-        keyExtractor={(item: Vehicle) => item.id.toString()}
+        keyExtractor={(item: Vehicle) => item.id}
         renderItem={({ item }) => <CarCard vehicle={item} />}
         ListHeaderComponent={renderHeader}
         ListEmptyComponent={

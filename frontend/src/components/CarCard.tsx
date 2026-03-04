@@ -10,12 +10,15 @@ interface CarCardProps {
 }
 
 export const CarCard: React.FC<CarCardProps> = ({ vehicle }) => {
+  const isAvailable = vehicle.in_service && !vehicle.is_rented;
+  const imageUrl = vehicle.primary_image?.url ?? (vehicle.images?.[0]?.url ?? null);
+
   return (
     <View style={styles.card}>
       <Image
         source={
-          vehicle.image_url
-            ? { uri: vehicle.image_url }
+          imageUrl
+            ? { uri: imageUrl }
             : require('../../assets/icon.png')
         }
         style={styles.image}
@@ -24,23 +27,23 @@ export const CarCard: React.FC<CarCardProps> = ({ vehicle }) => {
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.name} numberOfLines={1}>
-            {vehicle.name}
+            {vehicle.brand} {vehicle.model}
           </Text>
           <View
             style={[
               styles.badge,
-              vehicle.is_available ? styles.badgeAvailable : styles.badgeUnavailable,
+              isAvailable ? styles.badgeAvailable : styles.badgeUnavailable,
             ]}
           >
             <Text
               style={[
                 styles.badgeText,
-                vehicle.is_available
+                isAvailable
                   ? styles.badgeTextAvailable
                   : styles.badgeTextUnavailable,
               ]}
             >
-              {vehicle.is_available ? 'Available' : 'Unavailable'}
+              {isAvailable ? 'Available' : 'Unavailable'}
             </Text>
           </View>
         </View>
@@ -48,24 +51,24 @@ export const CarCard: React.FC<CarCardProps> = ({ vehicle }) => {
         <View style={styles.details}>
           <View style={styles.detailRow}>
             <Ionicons name="location-outline" size={14} color={Colors.textSecondary} />
-            <Text style={styles.detailText}>{vehicle.city}</Text>
+            <Text style={styles.detailText}>{vehicle.agency?.city ?? 'N/A'}</Text>
           </View>
           <View style={styles.detailRow}>
-            <Ionicons name="star" size={14} color={Colors.warning} />
-            <Text style={styles.detailText}>{vehicle.rating}</Text>
+            <Ionicons name="car-outline" size={14} color={Colors.textSecondary} />
+            <Text style={styles.detailText}>{vehicle.category?.name ?? 'N/A'}</Text>
           </View>
         </View>
 
         <View style={styles.footer}>
           <View style={styles.specs}>
-            <Text style={styles.specText}>{vehicle.transmission}</Text>
+            <Text style={styles.specText}>{vehicle.fuel?.name ?? 'N/A'}</Text>
             <Text style={styles.specDot}>•</Text>
-            <Text style={styles.specText}>{vehicle.fuel_type}</Text>
+            <Text style={styles.specText}>{vehicle.doors_number} doors</Text>
             <Text style={styles.specDot}>•</Text>
-            <Text style={styles.specText}>{vehicle.seats} seats</Text>
+            <Text style={styles.specText}>{vehicle.last_mileage} km</Text>
           </View>
           <Text style={styles.price}>
-            ${vehicle.price_per_day}
+            {vehicle.rental_price} MAD
             <Text style={styles.priceUnit}>/day</Text>
           </Text>
         </View>
