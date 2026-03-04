@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import * as Location from 'expo-location';
 
 interface LocationState {
@@ -13,7 +13,7 @@ export const useLocation = (): LocationState => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const requestLocation = async () => {
+  const requestLocation = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -39,11 +39,11 @@ export const useLocation = (): LocationState => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     requestLocation();
-  }, []);
+  }, [requestLocation]);
 
   return { city, isLoading, error, requestLocation };
 };
